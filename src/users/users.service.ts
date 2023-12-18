@@ -3,6 +3,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { User } from './user.entity';
 import { Repository } from 'typeorm';
 import { CreateUserDTO } from './dto/create-user.dto';
+import { UpdateUserDTO } from './dto/update-user.dto';
 @Injectable()
 export class UsersService {
   constructor(
@@ -22,5 +23,8 @@ export class UsersService {
   deleteUser(id: number) {
     //Se puede recibir por parametro
     return this.userRepository.delete({ id });
+  }
+  updateUser(id: number, user: UpdateUserDTO) {
+    return this.userRepository.update({ id }, user);
   }
 }
