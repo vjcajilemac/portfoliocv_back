@@ -2,7 +2,8 @@ import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
-import { UserModule } from './user/user.module';
+
+import { UsersModule } from './users/users.module';
 
 @Module({
   imports: [
@@ -16,8 +17,9 @@ import { UserModule } from './user/user.module';
       database: 'portfolio_db',
       synchronize: true,
       logging: true,
+      autoLoadEntities: true,
     }),
-    UserModule,
+    UsersModule,
   ],
   controllers: [AppController],
   providers: [AppService],
