@@ -1,15 +1,20 @@
 import { Injectable, HttpException, HttpStatus } from '@nestjs/common';
+
 import { InjectRepository } from '@nestjs/typeorm';
 import { User } from './user.entity';
+import { Profile } from './profile.entity';
 import { Repository } from 'typeorm';
 import { CreateUserDTO } from './dto/create-user.dto';
 import { UpdateUserDTO } from './dto/update-user.dto';
+import { CreateUserProfileDTO } from './dto/create-user-profile.dto';
 
 @Injectable()
 export class UsersService {
   constructor(
     @InjectRepository(User)
     private readonly userRepository: Repository<User>,
+    @InjectRepository(Profile)
+    private userProfileRepository: Repository<Profile>,
   ) {}
   async createUser(user: CreateUserDTO) {
     const userFound = await this.userRepository.findOne({
@@ -45,5 +50,21 @@ export class UsersService {
     //Second option
     const userUpdated = Object.assign(userFound, user);
     return this.userRepository.save(userUpdated);
+  }
+  async createProfile(id: number, profile: CreateUserProfileDTO) {
+    console.log('*****************************************');
+    try {
+      const userFound = await this.userRepository.findOne({ where: { id } });
+      if (!userFound)
+        return new HttpException('userNotFound', HttpStatus.NOT_FOUND);
+
+      const newProfile = this.userProfileRepository.create(profile);
+      console.log('TRY');
+      const savedProfile = await this.userProfileRepository.save(newProfile);
+      userFound.profile = savedProfile;
+      return this.userRepository.save(userFound);
+    } catch (error) {
+      throw new HttpException(error, HttpStatus.INTERNAL_SERVER_ERROR);
+    }
   }
 }
