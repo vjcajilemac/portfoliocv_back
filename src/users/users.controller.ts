@@ -22,12 +22,12 @@ export class UsersController {
     return this.usersServices.getUsers();
   }
   @Get(':id')
-  getUser(@Param('id', ParseIntPipe) id: number): Promise<User> {
+  getUser(@Param('id', ParseIntPipe) id: number) {
     return this.usersServices.getUser(id);
   }
 
   @Post()
-  createUser(@Body() newUser: CreateUserDTO): Promise<User> {
+  createUser(@Body() newUser: CreateUserDTO) {
     return this.usersServices.createUser(newUser);
   }
 
