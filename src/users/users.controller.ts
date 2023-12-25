@@ -7,18 +7,21 @@ import {
   ParseIntPipe,
   Delete,
   Patch,
+  UseGuards,
 } from '@nestjs/common';
 import { CreateUserDTO } from './dto/create-user.dto';
 import { UsersService } from './users.service';
 import { User } from './user.entity';
 import { UpdateUserDTO } from './dto/update-user.dto';
 import { CreateUserProfileDTO } from './dto/create-user-profile.dto';
+import { AuthGuard } from 'src/auth/guard/auth.guard';
 
 @Controller('users')
 export class UsersController {
   constructor(private usersServices: UsersService) {}
 
   @Get()
+  @UseGuards(AuthGuard)
   getUsers(): Promise<User[]> {
     return this.usersServices.getUsers();
   }
