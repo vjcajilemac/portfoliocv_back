@@ -1,6 +1,7 @@
 import {
   Entity,
   Column,
+  DeleteDateColumn,
   PrimaryGeneratedColumn,
   OneToOne,
   JoinColumn,
@@ -13,6 +14,8 @@ class User {
 
   @Column({ unique: true })
   username: string;
+  @Column({ unique: true, nullable: false })
+  email: string;
   @Column()
   password: string;
   @Column({ type: 'time', default: () => 'CURRENT_TIMESTAMP' })
@@ -22,6 +25,11 @@ class User {
   @OneToOne(() => Profile)
   @JoinColumn()
   profile: Profile;
+  @Column({ default: 'user' })
+  role: string;
+
+  @DeleteDateColumn()
+  deletedAt: Date;
 }
 
 export { User };

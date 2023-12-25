@@ -14,7 +14,7 @@ export class UsersService {
     @InjectRepository(User)
     private readonly userRepository: Repository<User>,
     @InjectRepository(Profile)
-    private userProfileRepository: Repository<Profile>,
+    private readonly userProfileRepository: Repository<Profile>,
   ) {}
   async createUser(user: CreateUserDTO) {
     const userFound = await this.userRepository.findOne({
@@ -23,6 +23,7 @@ export class UsersService {
     if (userFound)
       return new HttpException('User already exist', HttpStatus.CONFLICT);
     const newUser = this.userRepository.create(user);
+
     return this.userRepository.save(newUser);
   }
   getUsers() {
@@ -51,15 +52,23 @@ export class UsersService {
     const userUpdated = Object.assign(userFound, user);
     return this.userRepository.save(userUpdated);
   }
+  async findOneByEmail(email: string) {
+    return await this.userRepository.findOneBy({ email });
+  }
   async createProfile(id: number, profile: CreateUserProfileDTO) {
-    console.log('*****************************************');
     try {
       const userFound = await this.userRepository.findOne({ where: { id } });
       if (!userFound)
         return new HttpException('userNotFound', HttpStatus.NOT_FOUND);
 
+      if (!!!userFound.profile)
+        throw new HttpException(
+          'This user already have a profile',
+          HttpStatus.CONFLICT,
+        );
+
       const newProfile = this.userProfileRepository.create(profile);
-      console.log('TRY');
+
       const savedProfile = await this.userProfileRepository.save(newProfile);
       userFound.profile = savedProfile;
       return this.userRepository.save(userFound);
