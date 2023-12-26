@@ -10,6 +10,9 @@ class Profile {
   @Column({ type: 'date' })
   birth_day: string;
 
+  @Column({ type: 'varchar', length: 1000, nullable: true, default: '' })
+  info_description: string;
+
   age: number;
 
   @Column({ type: 'time', default: () => 'CURRENT_TIMESTAMP' })
