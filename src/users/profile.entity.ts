@@ -9,7 +9,10 @@ class Profile {
   last_name: string;
   @Column({ type: 'date' })
   birth_day: string;
-
+  @Column()
+  photo_path: string;
+  @Column()
+  phone: string;
   @Column({ type: 'varchar', length: 1000, nullable: true, default: '' })
   info_description: string;
 
